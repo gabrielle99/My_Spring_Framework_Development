@@ -1,0 +1,20 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<beans>
+
+    <bean id="userService" class="com.tianci.springframework.test.bean.UserService" init-method="initServiceMethod" destroy-method="destroyServiceMethod" scope="singleton">
+        <property name="uId" value="10001"/>
+        <property name="company" value="Tencent"/>
+        <property name="location" value="Shenzheng"/>
+        <property name="userDao" ref="proxyUserDao"/>
+    </bean>
+
+    <bean class="com.tianci.springframework.test.common.MyBeanPostProcessor"/>
+    <bean class="com.tianci.springframework.test.common.MyBeanFactoryPostProcessor"/>
+
+    <bean class="com.tianci.springframework.test.event.ContextClosedEventListener"/>
+    <bean class="com.tianci.springframework.test.event.ContextRefreshedEventListener"/>
+    <bean class="com.tianci.springframework.test.event.CustomEventListener"/>
+
+    <bean id="proxyUserDao" class="com.tianci.springframework.test.bean.ProxyBeanFactory"/>
+
+</beans>
