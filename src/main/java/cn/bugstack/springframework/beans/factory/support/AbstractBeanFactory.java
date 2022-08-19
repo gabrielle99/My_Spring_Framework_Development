@@ -8,6 +8,7 @@ import cn.bugstack.springframework.beans.factory.config.BeanDefinition;
 import cn.bugstack.springframework.beans.factory.config.BeanPostProcessor;
 import cn.bugstack.springframework.beans.factory.config.ConfigurableBeanFactory;
 import cn.bugstack.springframework.utils.ClassUtils;
+import cn.bugstack.springframework.utils.StringValueResolver;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -15,6 +16,7 @@ import java.util.List;
 public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport implements ConfigurableBeanFactory {
     private ClassLoader beanClassLoader = ClassUtils.getDefaultClassLoader();
     private final List<BeanPostProcessor> beanPostProcessors = new ArrayList<>();
+    private final List<StringValueResolver> embeddedValueResolvers = new ArrayList<>();
     @Override
     public Object getBean(String beanName) throws BeansException {
         return doGetBean(beanName, null);
@@ -46,6 +48,7 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
             return beanInstance;
         }
 
+        // 处理代理类
         Object obj = getCachedObjectForFactoryBean(beanName);
         if (obj == null){
             FactoryBean<?> factoryBean = (FactoryBean<?>) beanInstance;
@@ -61,6 +64,20 @@ public abstract class AbstractBeanFactory extends FactoryBeanRegistrySupport imp
     public void addBeanPostProcessor(BeanPostProcessor beanPostProcessor){
         this.beanPostProcessors.remove(beanPostProcessor);
         this.beanPostProcessors.add(beanPostProcessor);
+    }
+
+    @Override
+    public void addEmbeddedValueResolver(StringValueResolver resolver){
+        this.embeddedValueResolvers.add(resolver);
+    }
+
+    @Override
+    public String resolveEmbeddedValue(String value){
+        String result = value;
+        for (StringValueResolver resolver : this.embeddedValueResolvers){
+            result = resolver.resolveStringValue(result);
+        }
+        return result;
     }
 
     public List<BeanPostProcessor> getBeanPostProcessors() {

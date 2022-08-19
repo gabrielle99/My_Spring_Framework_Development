@@ -9,6 +9,7 @@ public abstract class AbstractRefreshableApplicationContext extends AbstractAppl
     @Override
     protected void refreshBeanFactory() throws BeansException {
         DefaultListableBeanFactory beanFactory = createBeanFactory();
+        //通过解析xml文件，将需要的BeanDefinition加到了DefaultListableBeanFactory 的 map 中
         loadBeanDefinitions(beanFactory);
         this.beanFactory = beanFactory;
     }

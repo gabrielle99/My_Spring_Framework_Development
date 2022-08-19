@@ -25,13 +25,14 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
 
     @Override
     public void refresh() throws BeansException{
-        // 1. Create BeanFactory and load BeanDefinition
+        // 1. Create BeanFactory and load BeanDefinition （创建出的BeanFactory在执行完下列指令后，将包含一个包括所需BeanDefinition的map）
         refreshBeanFactory();
 
-        // 2. Get BeanFactory
+        // 2. Get BeanFactory （获取上面创建出的BeanFactory）
         ConfigurableListableBeanFactory beanFactory = getBeanFactory();
 
         // this: ClassPathXmlApplicationContext
+        // 添加 ApplicationContextAwareProcessor，让继承自 ApplicationContextAware 的 Bean 对象都能感知所属的 ApplicationContext
         beanFactory.addBeanPostProcessor(new ApplicationContextAwareProcessor(this));
 
         invokeBeanFactoryPostProcessor(beanFactory);
@@ -93,10 +94,16 @@ public abstract class AbstractApplicationContext extends DefaultResourceLoader i
     }
 
     @Override
+    public <T> T getBean(Class<T> requiredType) throws BeansException {
+        return getBeanFactory().getBean(requiredType);
+    }
+
+    @Override
     public void registerShutdownHook(){
         Runtime.getRuntime().addShutdownHook(new Thread(this::close));
     }
 
+    //自动调用
     public void close(){
         publishEvent(new ContextClosedEvent(this));
         getBeanFactory().destroySingletons();

@@ -2,11 +2,15 @@ package com.tianci.springframework.test.bean;
 
 import cn.bugstack.springframework.beans.BeansException;
 import cn.bugstack.springframework.beans.factory.*;
+import cn.bugstack.springframework.beans.factory.annotation.Autowired;
+import cn.bugstack.springframework.beans.factory.annotation.Value;
 import cn.bugstack.springframework.context.ApplicationContext;
 import cn.bugstack.springframework.context.ApplicationContextAware;
+import cn.bugstack.springframework.stereotype.Component;
 
+@Component("userService")
 //public class UserService implements InitializingBean, DisposableBean {
-public class UserService implements BeanNameAware, BeanClassLoaderAware, ApplicationContextAware, BeanFactoryAware{
+public class UserService implements IUserService,BeanNameAware, BeanClassLoaderAware, ApplicationContextAware, BeanFactoryAware{
 //public class UserService{
     private ApplicationContext applicationContext;
     private BeanFactory beanFactory;
@@ -15,7 +19,11 @@ public class UserService implements BeanNameAware, BeanClassLoaderAware, Applica
     private String company;
     private String location;
 //    private UserDao userDao;
+    @Autowired
     private IUserDao userDao;
+
+    @Value("${token}")
+    private String token;
 
     public void initServiceMethod(){
         System.out.println("Execute: init userService method");
@@ -27,6 +35,15 @@ public class UserService implements BeanNameAware, BeanClassLoaderAware, Applica
 
     public String queryUserInfo() {
         return userDao.queryUserName(uId)+", Company: "+company+", Location: "+location;
+    }
+
+    public String queryUserAndToken(){
+        return userDao.queryUserName("10001")+","+token;
+//        return "token:"+token;
+    }
+
+    public String register(){
+        return "Register user";
     }
 
     public String getuId() {
@@ -96,6 +113,19 @@ public class UserService implements BeanNameAware, BeanClassLoaderAware, Applica
 
     public BeanFactory getBeanFactory() {
         return beanFactory;
+    }
+
+    public String getToken() {
+        return token;
+    }
+
+    public void setToken(String token) {
+        this.token = token;
+    }
+
+    @Override
+    public String toString() {
+        return "UserService#token = { " + token + " }";
     }
 
     //    @Override

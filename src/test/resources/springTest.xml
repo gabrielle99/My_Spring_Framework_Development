@@ -1,6 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <beans>
 
+    <bean class="cn.bugstack.springframework.aop.framework.autoproxy.DefaultAdvisorAutoProxyCreator"/>
+
     <bean id="userService" class="com.tianci.springframework.test.bean.UserService" init-method="initServiceMethod" destroy-method="destroyServiceMethod" scope="singleton">
         <property name="uId" value="10001"/>
         <property name="company" value="Tencent"/>
@@ -16,5 +18,15 @@
     <bean class="com.tianci.springframework.test.event.CustomEventListener"/>
 
     <bean id="proxyUserDao" class="com.tianci.springframework.test.bean.ProxyBeanFactory"/>
+
+
+    <bean id="beforeAdvice" class="com.tianci.springframework.test.bean.UserServiceBeforeAdvice"/>
+    <bean id="methodInterceptor" class="cn.bugstack.springframework.aop.framework.adapter.MethodBeforeAdviceInterceptor">
+        <property name="advice" ref="beforeAdvice"/>
+    </bean>
+    <bean id="pointcutAdvisor" class="cn.bugstack.springframework.aop.aspectj.AspectJExpressionPointcutAdvisor">
+        <property name="expression" value="execution(* com.tianci.springframework.test.bean.IUserService.*(..))"/>
+        <property name="advice" ref="methodInterceptor"/>
+    </bean>
 
 </beans>

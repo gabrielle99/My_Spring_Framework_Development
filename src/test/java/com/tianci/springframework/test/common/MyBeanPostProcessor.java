@@ -11,11 +11,13 @@ public class MyBeanPostProcessor implements BeanPostProcessor {
             UserService userService = (UserService) bean;
             userService.setLocation("change to: Toronto");
         }
+        System.out.println("postProcessBeforeInitialization");
         return bean;
     }
 
     @Override
     public Object postProcessAfterInitialization(Object bean, String beanName) throws BeansException {
+        System.out.println("postProcessAfterInitialization");
         return bean;
     }
 }

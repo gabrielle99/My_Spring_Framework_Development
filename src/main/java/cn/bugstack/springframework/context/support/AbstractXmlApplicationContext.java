@@ -13,5 +13,9 @@ public abstract class AbstractXmlApplicationContext extends AbstractRefreshableA
         }
     }
 
+    /**
+     * 抽象方法 -- 原因：子类可以有不同的ConfigLocations表示方法（File，classpath，url）
+     * @return
+     */
     protected abstract String[] getConfigLocations();
 }

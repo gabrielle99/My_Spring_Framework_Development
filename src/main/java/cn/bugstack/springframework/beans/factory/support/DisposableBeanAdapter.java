@@ -17,6 +17,7 @@ public class DisposableBeanAdapter implements DisposableBean {
         this.beanName = beanName;
         this.destroyMethodName = beanDefinition.getDestroyMethodName();
     }
+    //有的类可能既实现了DisposableBean，又在xml文件中定义了destroy-method，就需要Adapter
     @Override
     public void destroy() throws Exception {
         if (bean instanceof DisposableBean){

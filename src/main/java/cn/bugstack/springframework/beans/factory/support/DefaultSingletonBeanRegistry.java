@@ -18,6 +18,7 @@ public class DefaultSingletonBeanRegistry implements SingletonBeanRegistry {
         disposableBeans.put(beanName, disposableBean);
     }
 
+    //singleton 才要destroy
     public void destroySingletons(){
         Set<String> keySet = disposableBeans.keySet();
         Object[] disposalBeansArray = keySet.toArray();
